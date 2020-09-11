@@ -20,7 +20,6 @@ class ModelTests(TestCase):
         """Test that email is normailzed when user created"""
         email = 'test@EMAIL.com'
         user = get_user_model().objects.create_user(email, 'testpass123')
-
         self.assertEqual(user.email, email.lower())
 
     def test_user_invaild_email(self):
