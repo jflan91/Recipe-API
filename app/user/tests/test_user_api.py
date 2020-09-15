@@ -96,14 +96,15 @@ class PublicUserApiTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
+
 class PRIVATEUSERAPITESTS(TestCase):
     """Tests API requests that require Auth"""
 
     def setUp(self):
         self.user = create_user(
             email='test@email.com',
-            password = 'testpass123',
-            name = 'name'
+            password='testpass123',
+            name='name'
         )
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
