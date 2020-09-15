@@ -8,6 +8,7 @@ from rest_framework import status
 
 CREATE_USER_URL = reverse('user:create')
 TOKEN_URL = reverse('user:token')
+ENDUSER_URL = reverse('user:enduser')
 
 
 def create_user(**params):
@@ -88,3 +89,49 @@ class PublicUserApiTests(TestCase):
         res = self.client.post(TOKEN_URL, {'email': 'one', 'password': ''})
         self.assertNotIn('token', res.data)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_endpoint_authentication_required(self):
+        """Tests that authentication required for users"""
+        res = self.client.get(ENDUSER_URL)
+
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+class PRIVATEUSERAPITESTS(TestCase):
+    """Tests API requests that require Auth"""
+
+    def setUp(self):
+        self.user = create_user(
+            email='test@email.com',
+            password = 'testpass123',
+            name = 'name'
+        )
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+
+    def test_retrieve_profile(self):
+        """Test retrieving profile"""
+        res = self.client.get(ENDUSER_URL)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, {
+            'name': self.user.name,
+            'email': self.user.email
+        })
+
+    def test_post_enduser_not_allowed(self):
+        """Test that POST is not allowed on the endpoint URL"""
+        res = self.client.post(ENDUSER_URL, {})
+
+        self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_user_profile_updates(self):
+        """Test that user profile updates for enduser"""
+        payload = {'name': 'diffname', 'password': 'newpassword'}
+
+        res = self.client.patch(ENDUSER_URL, payload)
+
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.name, payload['name'])
+        self.assertTrue(self.user.check_password(payload['password']))
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        
