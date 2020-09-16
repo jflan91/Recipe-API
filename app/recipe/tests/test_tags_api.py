@@ -53,7 +53,7 @@ class PrivateTagsApiTests(TestCase):
         """Test only retrieve authenticated enduser tags"""
         user2 = get_user_model().objects.create_user(
             'test2',
-            'tespass123'
+            'testpass123'
         )
         Tag.objects.create(user=user2, name='Seafood')
         tag = Tag.objects.create(user=self.user, name='Quick Meals')
