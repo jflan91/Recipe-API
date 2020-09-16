@@ -39,8 +39,8 @@ class PrivateTagsApiTests(TestCase):
 
     def test_retrieve_tags(self):
         """Test tag retrieval"""
-        Tag.objects.create(user=self.user, name='Chicken')
-        Tag.objects.create(user=self.user, name='Beef')
+        Tag.objects.create(user=self.user, name='Italian')
+        Tag.objects.create(user=self.user, name='German')
 
         res = self.client.get(TAGS_URL)
 
@@ -55,8 +55,8 @@ class PrivateTagsApiTests(TestCase):
             'test2',
             'tespass123'
         )
-        Tag.objects.create(user=user2, name='Fish')
-        tag = Tag.objects.create(user=self.user, name='Pork')
+        Tag.objects.create(user=user2, name='Seafood')
+        tag = Tag.objects.create(user=self.user, name='Quick Meals')
 
         res = self.client.get(TAGS_URL)
 
