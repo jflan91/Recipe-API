@@ -1,0 +1,5 @@
+#cloudbuild.yaml
+
+steps:
+- name: ‘docker/compose:1.19.0’
+  args: [‘up’, ‘-d’]
