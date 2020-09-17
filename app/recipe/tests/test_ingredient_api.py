@@ -110,14 +110,14 @@ class PrivateIngredientsApiTests(TestCase):
         recipe1 = Recipe.objects.create(
             title='Cheeseburgers',
             time_minutes=30,
-            price = 10.00,
+            price=10.00,
             user=self.user
         )
         recipe1.ingredients.add(ingredient)
         recipe2 = Recipe.objects.create(
             title='Tacos',
             time_minutes=40,
-            price = 10.00,
+            price=10.00,
             user=self.user
         )
         recipe2.ingredients.add(ingredient)
