@@ -5,6 +5,8 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
 
+from user.apps import UserConfig
+
 
 CREATE_USER_URL = reverse('user:create')
 TOKEN_URL = reverse('user:token')
@@ -97,7 +99,7 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class PRIVATEUSERAPITESTS(TestCase):
+class PrivateUserApiTests(TestCase):
     """Tests API requests that require Auth"""
 
     def setUp(self):
@@ -135,3 +137,10 @@ class PRIVATEUSERAPITESTS(TestCase):
         self.assertEqual(self.user.name, payload['name'])
         self.assertTrue(self.user.check_password(payload['password']))
         self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+
+class UserAppTest(TestCase):
+
+    def test_app(self):
+        test_user = UserConfig.name
+        self.assertEqual(test_user, 'user')
