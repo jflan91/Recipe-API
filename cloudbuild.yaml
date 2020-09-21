@@ -1,13 +1,22 @@
-steps:
-# Build the container image
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/recipe-restful-api/github.com/jflan91/recipe-api@sha256:db20390d08bd15a8d280ee96f8c5ef4dddf72d6703f2c341aed4c37a28dd07cd', '.']
-# Push the container image to Container Registry
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/recipe-restful-api/github.com/jflan91/recipe-api@sha256:db20390d08bd15a8d280ee96f8c5ef4dddf72d6703f2c341aed4c37a28dd07cd']
-# Deploy container image to Cloud Run
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: gcloud
-  args: ['run', 'deploy', 'recipeapi', '--image', 'gcr.io/recipe-restful-api/github.com/jflan91/recipe-api@sha256:db20390d08bd15a8d280ee96f8c5ef4dddf72d6703f2c341aed4c37a28dd07cd', '--region', 'REGION', '--platform', 'managed']
-images:
-- gcr.io/recipe-restful-api/github.com/jflan91/recipe-api@sha256:db20390d08bd15a8d280ee96f8c5ef4dddf72d6703f2c341aed4c37a28dd07cd
+ steps:
+ # Build the container image
+ - name: 'gcr.io/cloud-builders/docker'
+   args: ['build', '-t', 'gcr.io/$PROJECT_ID/recipeapi:$COMMIT_SHA', '.']
+ # Push the container image to Container Registry
+ - name: 'gcr.io/cloud-builders/docker'
+   args: ['push', 'gcr.io/$PROJECT_ID/recipeapi:$COMMIT_SHA']
+ # Deploy container image to Cloud Run
+ - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+   entrypoint: gcloud
+   args:
+   - 'run'
+   - 'deploy'
+   - 'recipeapi'
+   - '--image'
+   - 'gcr.io/$PROJECT_ID/recipeapi:$COMMIT_SHA'
+   - '--region'
+   - 'us-central1'
+   - '--platform'
+   - 'managed'
+ images:
+ - 'gcr.io/$PROJECT_ID/recipeapi:$COMMIT_SHA'
